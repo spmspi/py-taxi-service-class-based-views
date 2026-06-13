@@ -17,15 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from taxi.views import ManufacturerListView, CarListView, DriverListView, DriverDetailView, CarDetailView
+from taxi.views import (ManufacturerListView,
+                        CarListView,
+                        DriverListView,
+                        DriverDetailView,
+                        CarDetailView)
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("taxi.urls", namespace="taxi")),
-    path("manufacturers/", ManufacturerListView.as_view(), name="manufacturer-list"),
-    path("cars/", CarListView.as_view(), name="cars-list"),
-    path("cars/<int:pk>/", CarDetailView.as_view(), name="car-detail"),
-    path("drivers/", DriverListView.as_view(), name="drivers-list"),
-    path("drivers/<int:pk>/", DriverDetailView.as_view(), name="drivers-detail"),
+    path("", include("taxi.urls",
+                     namespace="taxi")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
