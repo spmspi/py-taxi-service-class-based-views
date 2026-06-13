@@ -1,5 +1,6 @@
+from os import name
 from django.shortcuts import render
-
+from django.views import generic
 from taxi.models import Driver, Car, Manufacturer
 
 
@@ -13,3 +14,33 @@ def index(request):
     }
 
     return render(request, "taxi/index.html", context=context)
+
+class ManufacturerListView(generic.ListView):
+    model = Manufacturer
+    queryset = Manufacturer.objects.filter(name=name)
+    context_object_name = "manufacturers_list"
+    paginate_by = 5
+
+
+class CarListView(generic.ListView):
+    model = Car
+    template_name = "taxi/cars_list.html"
+    queryset = Car.objects.select_related("manufacturer").all()
+    context_object_name = "cars_list"
+    paginate_by = 5
+
+class CarDetailView(generic.DetailView):
+    model = Car
+    template_name = "taxi/car_detail.html"
+
+class DriverListView(generic.ListView):
+    model = Driver
+    template_name = "taxi/drivers_list.html"
+    context_object_name = "drivers_list"
+    queryset = Driver.objects.all()
+    paginate_by = 5
+
+class DriverDetailView(generic.DetailView):
+    model = Driver
+    template_name = "taxi/drivers_detail.html"
+    queryset = Driver.objects.all().prefetch_related("cars__manufacturer")
